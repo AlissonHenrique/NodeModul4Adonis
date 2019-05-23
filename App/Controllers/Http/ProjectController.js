@@ -10,9 +10,7 @@ class ProjectController {
     return projects;
   }
 
-  async create({ request, response, view }) {}
-
-  async store({ request, response, auth }) {
+  async store({ request, auth }) {
     const data = request.only(["title", "description"]);
 
     const project = await Project.create({ ...data, user_id: auth.user.id });
@@ -26,9 +24,7 @@ class ProjectController {
     return project;
   }
 
-  async edit({ params, request, response, view }) {}
-
-  async update({ params, request, response }) {
+  async update({ params, request }) {
     const project = await Project.findOrFail(params.id);
     const data = request.only(["title", "description"]);
     project.merge(data);
@@ -37,7 +33,7 @@ class ProjectController {
     return project;
   }
 
-  async destroy({ params, request, response }) {
+  async destroy({ params }) {
     const project = await Project.findOrFail(params.id);
     await project.delete();
   }
