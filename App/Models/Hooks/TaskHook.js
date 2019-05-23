@@ -1,8 +1,31 @@
 'use strict'
 
+// eslint-disable-next-line no-undef
+const Mail = use('Mail')
+// eslint-disable-next-line no-undef
+const Helpers = use('Helpers')
 const TaskHook = (exports = module.exports = {})
 
-TaskHook.method = async taskInstance => {
+TaskHook.sendNewTaskMail = async taskInstance => {
   if (!taskInstance.user_id || !taskInstance.dirty.user_id) return
-  console.log('executou')
+
+  const { email, username } = await taskInstance.user().fetch()
+  const file = await taskInstance.file().fetch()
+
+  const { title } = taskInstance
+  await Mail.send(
+    ['emails.new_task'],
+    { username, title, hasAttachment: !!file },
+    message => {
+      message
+        .to(email)
+        .from('alisson@fce.edu.br', 'Alisson')
+        .subject('Nova tarefa para você')
+      if (file) {
+        message.attach(Helpers.tmpPath(`uploads/${file.file}`), {
+          filename: file.name
+        })
+      }
+    }
+  )
 }
