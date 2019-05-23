@@ -1,53 +1,54 @@
-"use strict";
-const Task = use("App/models/Task");
+'use strict'
+// eslint-disable-next-line no-undef
+const Task = use('App/models/Task')
 class TaskController {
-  async index({ params }) {
+  async index ({ params }) {
     const tasks = await Task.query()
-      .where("project_id", params.projects_id)
-      .with("user")
-      .fetch();
+      .where('project_id', params.projects_id)
+      .with('user')
+      .fetch()
 
-    return tasks;
+    return tasks
   }
 
-  async store({ request, params }) {
+  async store ({ request, params }) {
     const data = request.only([
-      "user_id",
-      "title",
-      "description",
-      "due_date",
-      "file_id"
-    ]);
+      'user_id',
+      'title',
+      'description',
+      'due_date',
+      'file_id'
+    ])
 
-    const task = await Task.create({ ...data, project_id: params.projects_id });
-    return task;
+    const task = await Task.create({ ...data, project_id: params.projects_id })
+    return task
   }
 
-  async show({ params }) {
-    const task = await Task.findOrFail(params.id);
+  async show ({ params }) {
+    const task = await Task.findOrFail(params.id)
 
-    return task;
+    return task
   }
 
-  async update({ params, request }) {
-    const task = await Task.findOrFail(params.id);
+  async update ({ params, request }) {
+    const task = await Task.findOrFail(params.id)
     const data = request.only([
-      "user_id",
-      "title",
-      "description",
-      "due_date",
-      "file_id"
-    ]);
-    task.merge(data);
-    await task.save();
-    return task;
+      'user_id',
+      'title',
+      'description',
+      'due_date',
+      'file_id'
+    ])
+    task.merge(data)
+    await task.save()
+    return task
   }
 
-  async destroy({ params }) {
-    const task = await Task.findOrFail(params.id);
+  async destroy ({ params }) {
+    const task = await Task.findOrFail(params.id)
 
-    await task.delete();
+    await task.delete()
   }
 }
 
-module.exports = TaskController;
+module.exports = TaskController
